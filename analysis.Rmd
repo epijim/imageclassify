@@ -1,0 +1,15 @@
+---
+title: "Cat or dog?"
+author: James Black (epijim.uk)
+output: html_notebook
+---
+
+In 2007 released an animal based CAPTCHA called Asirra, which asked a user to categorise a picture as containing a cat or a dog. At the time (a decade ago!), this simple test was enough to tell human from computer. The [conference abstract](https://www.microsoft.com/en-us/research/publication/asirra-a-captcha-that-exploits-interest-aligned-manual-image-categorization/) for Asirra states the following:
+
+> We present Asirra, a CAPTCHA that asks users to identify cats out of a set of 12 photographs of both cats and dogs. Asirra is easy for users; user studies indicate it can be solved by humans 99.6% of the time in under 30 seconds. Barring a major advance in machine vision, we expect computers will have no better than a 1/54,000 chance of solving it. 
+
+Six years later, in 2013, Microsoft must have realised Asirra's time was up. They released 25,000 of the images from the Asirra database to Kaggle, and promoted a competition to see how good a model the general public could make.
+
+The training archive contains 25,000 images of dogs and cats (1 = dog, 0 = cat). Below is the leaderboard from when the competition closed, 3 years ago. To be in the top 10, you need an accuracy of more than 0.979 on the test data. 
+
+![Leaderboard](leaderboard.jpg)
