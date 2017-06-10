@@ -13,3 +13,87 @@ Six years later, in 2013, Microsoft must have realised Asirra's time was up. The
 The training archive contains 25,000 images of dogs and cats (1 = dog, 0 = cat). Below is the leaderboard from when the competition closed, 3 years ago. To be in the top 10, you need an accuracy of more than 0.979 on the test data. 
 
 ![Leaderboard](leaderboard.jpg)
+
+### Packages
+
+```{r}
+library(tensorflow)
+library(keras)
+```
+
+
+### File locations and settings
+
+```{r}
+train_directory <- "train"
+validation_directory <- "validation"
+
+img_width <- 150
+img_height <- 150
+batch_size <- 32
+epochs <- 30
+train_samples = 2048
+validation_samples = 832
+```
+
+### Loading images
+
+```{r}
+data_train <- flow_images_from_directory(
+  # path to the target directory. It should contain one subdirectory per class
+  directory = "train", 
+  # Image data generator
+  generator = image_data_generator(),
+  # The dimensions to which all images found will be resized
+  target_size = c(256, 256), 
+  # one of "grayscale", "rbg"
+  color_mode = "rgb",
+  # Determines the type of label arrays that are returned
+  class_mode = "binary", 
+  # int (default: 32)
+  batch_size = 32, 
+  shuffle = TRUE,
+  seed = 1234,
+  # This allows you to optimally specify a directory to which to save 
+  # the augmented pictures being generated (useful for visualizing what you are doing).
+  # save_to_dir 
+  )
+```
+
+## Small Conv Net
+
+### Model architecture definition
+
+```{r}
+model <- keras_model_sequential()
+
+model %>%
+  layer_conv_2d(
+    filter = 32, 
+    kernel_size = c(3,3), 
+    input_shape = c(256, 256, 3)
+    ) %>%
+  layer_activation("relu") %>%
+  layer_max_pooling_2d(pool_size = c(2,2)) %>% 
+  
+  layer_conv_2d(filter = 32, kernel_size = c(3,3)) %>%
+  layer_activation("relu") %>%
+  layer_max_pooling_2d(pool_size = c(2,2)) %>%
+  
+  layer_conv_2d(filter = 64, kernel_size = c(3,3)) %>%
+  layer_activation("relu") %>%
+  layer_max_pooling_2d(pool_size = c(2,2)) %>%
+  
+  layer_flatten() %>%
+  layer_dense(64) %>%
+  layer_activation("relu") %>%
+  layer_dropout(0.5) %>%
+  layer_dense(1) %>%
+  layer_activation("sigmoid")
+
+model %>% compile(
+  loss = "binary_crossentropy",
+  optimizer = optimizer_rmsprop(lr = 0.0001, decay = 1e-6),
+  metrics = "accuracy"
+)
+```
